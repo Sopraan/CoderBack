@@ -1,44 +1,68 @@
+const fs = require('fs')
+
 class ProductManager {
 
     constructor() {
         this.productos = []
     }
 
-    getProduct = () => this.productos
+    getProduct = async () => {
 
-    getProductById = (id) => {
+        return fs.promises.readFile('productos.json')
+            .then(producto => {
+                if (producto) {
+                    const productos = JSON.parse(producto)
+                    return productos
+                } else return []
+            })
+            .catch(error => {
+                console.log('no existen productos en el archivo')
+                return []
+            })
+
+
+
+    }
+
+    saveProducto = async (productosNuevos) => {
+        const gardadoProducto = JSON.stringify(productosNuevos)
+        fs.promises.writeFile('productos.json', gardadoProducto, error => console.log(error))
+
+    }
+
+    getProductById = async (id) => {
+
+        const productos = await this.getProduct()
+
         const productoEncontrado = this.productos.find(producto => producto.id === id)
         return productoEncontrado || console.error('Producto no encontrado')
     }
 
-    getNextID = () => {
-        const cantidad = this.productos.length
+    getNextID = async () => {
 
-      return cantidad + 1
+        const productos = await this.getProduct()
+
+        const length = productos.length
+
+        if (length > 0) {
+            const ultimoProducto = productos[length - 1]
+            const id = ultimoProducto.id + 1
+
+            return id
+        } else return 1
     }
-
-
-    getNueviId =() =>{
-
-        const productos = this.productos.length
-
-       
-         return productos.id +1
-
-
-    }
-
 
 
     // Validacion de existencia de producto
-    checkFields = (producto) => {
+    checkFields = async (producto) => {
 
         const campoVacio = []
+        const productos = await this.getProduct()
 
-        const codigoRepetido = this.productos.some(prod => prod.codigo === producto.codigo)
+        const codigoRepetido = productos.some(prod => prod.codigo === producto.codigo)
 
 
-        if(codigoRepetido) {
+        if (codigoRepetido) {
             console.error(`El código ${producto.codigo} ya se encuentra en uso, por favor ingrese otro codigo`)
             return false
         }
@@ -46,20 +70,20 @@ class ProductManager {
         // Validacion de valores y guardado
         const productoValores = Object.entries(producto)
         productoValores.forEach(value => {
-            if(!value[1]) campoVacio.push(value[0])
+            if (!value[1]) campoVacio.push(value[0])
         })
 
-        
-        if(campoVacio.length !== 0) { 
+
+        if (campoVacio.length !== 0) {
             console.error("Debe completar todos los campos. Campos vacíos: ", campoVacio)
             return false
-        } 
+        }
         return true
     }
 
-    addProducto = (titulo, descripcion, precio, thumbnail, codigo, stock) => {
+    addProducto = async (titulo, descripcion, precio, thumbnail, codigo, stock) => {
 
-        const id = this.getNextID()
+        const id = await this.getNextID()
 
         const producto = {
             id,
@@ -71,34 +95,84 @@ class ProductManager {
             stock
         }
 
-        if(this.checkFields(producto)) {
-            this.productos.push(producto)
+
+        if (await this.checkFields(producto)) {
+
+            const productos = await this.getProduct()
+
+            productos.push(producto)
+
+            this.saveProducto(productos)
+
+
         }
     }
+
+     updateProduct = async (id,obj) =>{
+
+        const productos = await this.getProduct()
+
+        let productoAModificar  = productos.find(producto => producto.id === id)
+    
+        if (!productoAModificar)
+    
+            return console.log("el producto no existe")
+
+           let productoIndex = productos.findIndex(producto => producto.id === id)
+
+            productos[productoIndex] = {
+                
+                ...productos[productoIndex],
+                ...obj,
+                id: id
+            }
+            this.saveProducto(productos)
+     }
+
+     
+
+
+
+
+
+     deleteProduct = async (id) => {
+
+    const productos = await this.getProduct()
+
+    const validarId = () => productos.some(producto => producto.id === id)
+
+    if (!validarId())
+
+        return console.log("el producto no existe")
+
+    const actualizacionProductos = productos.filter(producto => producto.id !== id)
+    this.saveProducto(actualizacionProductos)
+
 }
 
 
-
-const productManager = new ProductManager()
-
-console.log(productManager.getProduct())
-
-productManager.addProducto("mouse", "logitech", 1000, "Sin imagen", "123", 25)
-
-console.log(productManager.getProduct())
-console.log("SEPARADOR DE PRUEBA")
+// fin de CLASS
+}
 
 
-productManager.addProducto("teclado", "razer", 2000, "Sin imagen", "123", 22)
-productManager.addProducto("      ", "", 0, "", "", )
+async function ejecutar() {
+    const productManager = new ProductManager('productos.json')
 
-console.log(productManager.getProduct())
-console.log("SEPARADOR DE PRUEBA")
+    console.log(await productManager.getProduct())
 
-productManager.addProducto("monitor", "asus", 3000, "Sin imagen", "111", 31)
-productManager.addProducto("pad  ", "   hyperx", 4000, "  Sin imagen", " 112", 27)
+    await productManager.addProducto("mouse", "razer", 1000, "Sin imagen", "123", 25)
+    await productManager.addProducto("mouse", "logitech", 2000, "Sin imagen", "124", 25)  
+    await productManager.addProducto("monitor", "lasus", 1000, "Sin imagen", "125", 25) 
+    await productManager.addProducto("teclado", "logitech", 1000, "Sin imagen", "126", 25) 
+
+    console.log(await productManager.getProduct(1))
+
+    await productManager.deleteProduct(4)
+   
 
 
-console.log(productManager.getProduct())
-console.log(productManager.getProductById(2))
-console.log(productManager.getProductById(20))
+     await productManager.updateProduct(1, {titulo:"pad", precio:2000})
+     
+}
+
+ejecutar()
