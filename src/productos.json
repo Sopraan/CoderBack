@@ -1,0 +1,39 @@
+[
+    {
+        "id": 1,
+        "titulo": "mouse",
+        "descripcion": "razer",
+        "precio": 1000,
+        "thumbnail": "Sin imagen",
+        "codigo": "123",
+        "stock": 25
+    },
+    {
+        "id": 2,
+        "titulo": "mouse", 
+        "descripcion": "logitech",
+        "precio": 2000,
+        "thumbnail": "Sin imagen",
+        "codigo": "124",
+        "stock": 25
+    },
+    {
+        "id": 3,
+        "titulo": "monitor",
+        "descripcion": "lasus",
+        "precio": 1000,
+        "thumbnail": "Sin imagen",
+        "codigo": "125",
+        "stock": 25
+    },
+    {
+        "id": 4,
+        "titulo": "teclado",
+        "descripcion": "logitech",
+        "precio": 1000,
+        "thumbnail": "Sin imagen",
+        "codigo": "126",
+        "stock": 25
+    }
+]
+

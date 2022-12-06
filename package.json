@@ -1,0 +1,23 @@
+{
+  "name": "coderback",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Back.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sopraan/CoderBack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sopraan/CoderBack/issues"
+  },
+  "homepage": "https://github.com/Sopraan/CoderBack#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
