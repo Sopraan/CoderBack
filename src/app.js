@@ -1,4 +1,9 @@
+
+import cartRouter from './router/users.router.js';
+import productsRouter from './router/products.router.js';
 const express = require("express");
+
+
 
 const ProductManager = require("./Back");
 
@@ -13,6 +18,10 @@ app.get('/products', async (req, res) => {
 app.get('/products/:id', async (req, res) => {
     res.send(await productManager.getProductById(req.params.id));
 })
+
+app.use('/api/cart',cartRouter)
+
+app.use('/api/products',productsRouter)
 
 
 
