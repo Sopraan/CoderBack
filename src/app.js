@@ -1,27 +1,15 @@
 
-import cartRouter from './router/users.router.js';
-import productsRouter from './router/products.router.js';
+const CartRouter = require("./routes/carts.router");
+const ProductsRouter = require("./routes/products.router");
 const express = require("express");
-
-
-
-const ProductManager = require("./Back");
 
 const app  = express()
 
-const productManager = new ProductManager()
+app.use(express.json());
 
-app.get('/products', async (req, res) => {
-    res.send(await productManager.getProduct(req.query.limit));
-})
+app.use('/api/carts', CartRouter)
 
-app.get('/products/:id', async (req, res) => {
-    res.send(await productManager.getProductById(req.params.id));
-})
-
-app.use('/api/cart',cartRouter)
-
-app.use('/api/products',productsRouter)
+app.use('/api/products', ProductsRouter)
 
 
 
