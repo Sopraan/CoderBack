@@ -9,6 +9,9 @@ router.get("/", async (req, res) => {
   res.send(await productManager.getProduct(req.query.limit));
 });
 
+
+
+
 router.post("/", async (req, res) => {
   const data = req.body;
   res.send(
