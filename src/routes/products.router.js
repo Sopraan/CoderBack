@@ -1,5 +1,5 @@
 const express = require("express");
-const { ProductManager } = require("../Manager");
+const ProductManager = require("../dao/ProductManagerDB");
 
 const productManager = new ProductManager();
 
@@ -30,16 +30,16 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   res.send(
-    await productManager.updateProduct(parseInt(req.params.id), req.body)
+    await productManager.updateProduct(req.params.id, req.body)
   );
 });
 
 router.delete("/:id", async (req, res) => {
-  res.send(await productManager.deleteProduct(parseInt(req.params.id)));
+  res.send(await productManager.deleteProduct(req.params.id));
 });
 
 router.get("/:id", async (req, res) => {
-  res.send(await productManager.getProductById(parseInt(req.params.id)));
+  res.send(await productManager.getProductById(req.params.id));
 });
 
 module.exports = router;

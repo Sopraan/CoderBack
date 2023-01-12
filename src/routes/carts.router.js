@@ -1,5 +1,5 @@
 const express = require("express");
-const { CartManager } = require("../Manager");
+const CartManager = require("../dao/CartManagerDB.js");
 
 const cartManager = new CartManager();
 
@@ -10,16 +10,11 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  res.send(await cartManager.getCarritoById(parseInt(req.params.id)));
+  res.send(await cartManager.getCarritoById(req.params.id));
 });
 
 router.post("/:cid/product/:pid", async (req, res) => {
-  res.send(
-    await cartManager.updateCarrito(
-      parseInt(req.params.cid),
-      parseInt(req.params.pid)
-    )
-  );
+  res.send(await cartManager.updateCarrito(req.params.cid, req.params.pid));
 });
 
 module.exports = router;

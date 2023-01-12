@@ -1,5 +1,5 @@
 const express = require("express");
-const { ProductManager } = require("../Manager");
+const ProductManager = require("../dao/ProductManagerDB");
 
 const productManager = new ProductManager();
 
