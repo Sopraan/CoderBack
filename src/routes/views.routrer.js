@@ -6,11 +6,16 @@ const productManager = new ProductManager();
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  res.render('home',{productos: await productManager.getProduct()})
+  console.log(await productManager.getProduct());
+  res.render("home", { productos: await productManager.getProduct() });
 });
 
 router.get("/realtimeproducts", async (req, res) => {
-    res.render('realTimeProducts',{})
-  });
+  res.render("realTimeProducts", {});
+});
+
+router.get("/chat", async (req, res) => {
+  res.render("chat", {});
+});
 
 module.exports = router;

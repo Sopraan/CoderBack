@@ -5,8 +5,11 @@ const express = require("express");
 const { Server} = require("socket.io");
 const handlebars = require("express-handlebars");
 const ProductManager = require("./dao/ProductManagerDB");
+const MessageManager = require("./dao/MessageManagerDB");
 
-const productManager =new ProductManager();
+const productManager = new ProductManager();
+const messageManager = new MessageManager();
+
 const app = express();
 const httpServer = app.listen(8080, () => console.log("servidor 8080 ON"));
 const io = new Server(httpServer);
@@ -26,14 +29,29 @@ app.use("/api/carts", CartRouter);
 app.use("/api/products", ProductsRouter);
 
 app.engine("handlebars", handlebars.engine());
-app.set("views", "./views");
+app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
-app.use(express.static("./public"));
+app.use(express.static(__dirname + "/public"));
 app.use("/", viewsRouter);
 
 io.on("connection", (socket) => {
   console.log("aadaddddddd");
   socket.on("dame-productos", async () => {
     io.emit("productos", { productos: await productManager.getProduct() });
+
   });
+  
+  socket.on("get-message-history", async () => {
+    io.emit("message-history", { messages: await messageManager.getMessages() });
+  });
+
+  
+  socket.on("message", async ({user, message}) => {
+    messageManager.addMessage(user, message);
+    io.emit("message-history", { messages: await messageManager.getMessages() });
+  });
+  
 });
+
+
+
