@@ -6,7 +6,19 @@ const productManager = new ProductManager();
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  res.send(await productManager.getProduct(req.query.limit));
+  const limit = req.query.limit || 10
+  const page = req.query.page || 1
+  const sort = { precio: req.query.sort || "asc" }
+  console.log(req.query.filter)
+  const filter = req.query.filter? JSON.parse(req.query.filter): {}
+  
+  console.log(filter)
+  res.send(await productManager.getProduct(
+    filter, {
+    limit,
+    page,
+    sort
+  }));
 });
 
 

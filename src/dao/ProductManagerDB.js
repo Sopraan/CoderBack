@@ -3,8 +3,8 @@ const productModel = require("../models/product.model.js")
 class ProductManager {
   constructor() {}
 
-  getProduct = async (limit) => {
-    return await productModel.find().limit(limit).exec()
+  getProduct = async (query, options) => {
+    return await productModel.paginate(query, options)
   };
 
   getProductById = async (id) => {
