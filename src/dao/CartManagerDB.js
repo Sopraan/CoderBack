@@ -39,7 +39,7 @@ class CartManager {
     console.log(carritoAModificar);
 
     let indexProductoAModificar = carritoAModificar.productos.findIndex(
-      (item) => item.producto === idProducto
+      (item) => String(item.producto) === idProducto
     );
 
     if (indexProductoAModificar >= 0) {
@@ -83,7 +83,7 @@ class CartManager {
     console.log(carritoAModificar);
 
     let productosActualizados = carritoAModificar.productos.filter(
-      (item) => item.producto !== idProducto
+      (item) => String(item.producto) !== idProducto
     );
 
     return await cartModel.findOneAndUpdate(

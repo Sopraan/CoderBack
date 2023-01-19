@@ -4,11 +4,19 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const cartsCollection = "carts"
 
 const cartSchema = new mongoose.Schema({
-    productos: [{
-        _id: false,
-        producto: String,
-        cantidad: Number
-    }]
+    productos: {
+        type: [
+            {
+                _id: false,
+                producto: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "products"
+                },
+                cantidad: Number
+            }
+        ],
+        default: []
+    }
 })
 cartSchema.plugin(mongoosePaginate)
 

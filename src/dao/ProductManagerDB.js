@@ -4,7 +4,7 @@ class ProductManager {
   constructor() {}
 
   getProduct = async (query, options) => {
-    return await productModel.paginate(query, options)
+    return await productModel.paginate(query, {...options, populate: "productos.producto"})
   };
 
   getProductById = async (id) => {
